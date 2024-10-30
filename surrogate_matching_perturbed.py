@@ -143,6 +143,8 @@ def run_matching_perturbed():
     surrogate_gradients = inputs.grad.clone()
 
     # Compare gradients
+    print(target_gradients.view(-1).shape)
+
     dot_product = torch.dot(target_gradients.view(-1), surrogate_gradients.view(-1))
     print("Dot Product of Gradients:", dot_product.item())
     if dot_product.item() > 0:

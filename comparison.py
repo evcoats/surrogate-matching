@@ -10,7 +10,7 @@ perturbedSumCos = 0
 perturbedSumAngle = 0
 
 
-for i in range(100):
+for i in range(10):
     _, scos,sangle = run_matching_simple()
     simpleSumCos += scos
     simpleSumAngle += sangle
