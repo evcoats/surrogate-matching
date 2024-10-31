@@ -131,5 +131,3 @@ def run_matching_simple(input_size = 10, hidden_size = 20, surrogate_hidden_size
 
     return (dp,cos,angl)
 
-
-
