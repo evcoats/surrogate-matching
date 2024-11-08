@@ -11,7 +11,7 @@ np.random.seed(42)
 random.seed(42)
 
 # Parameters for data generation
-input_size = 1      # Number of input features
+input_size = 5      # Number of input features
 time_steps = 50     # Number of time steps in the sequence
 batch_size = 100    # Batch size for training the surrogate model
 hidden_size_rnn = 80     # Hidden size for the surrogate RNN
@@ -19,7 +19,7 @@ hidden_size_rnn = 80     # Hidden size for the surrogate RNN
 # Step 1: Generate Input Sequences with 1 Probability 2/5
 def generate_input_sequences(batch_size, time_steps, input_size):
     # Generate random binary sequences where 1 has probability 0.4
-    probability = 0.4  # Probability of 1
+    probability = 0.1  # Probability of 1
     sequences = np.random.binomial(1, probability, size=(batch_size, time_steps, input_size))
     return torch.tensor(sequences, dtype=torch.float32)
 
