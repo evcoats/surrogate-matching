@@ -11,7 +11,7 @@ np.random.seed(42)
 random.seed(42)
 
 # Parameters for data generation
-input_size = 5      # Number of input features
+input_size = 3     # Number of input features
 time_steps = 50     # Number of time steps in the sequence
 batch_size = 100    # Batch size for training the surrogate model
 hidden_size_rnn = 80     # Hidden size for the surrogate RNN
@@ -19,7 +19,7 @@ hidden_size_rnn = 80     # Hidden size for the surrogate RNN
 # Step 1: Generate Input Sequences with 1 Probability 2/5
 def generate_input_sequences(batch_size, time_steps, input_size):
     # Generate random binary sequences where 1 has probability 0.4
-    probability = 0.1  # Probability of 1
+    probability = 0.1  
     sequences = np.random.binomial(1, probability, size=(batch_size, time_steps, input_size))
     return torch.tensor(sequences, dtype=torch.float32)
 
@@ -88,12 +88,12 @@ class SurrogateRNN(nn.Module):
         super(SurrogateRNN, self).__init__()
         self.rnn = nn.RNN(input_size, hidden_size, batch_first=True)
         self.fc = nn.Linear(hidden_size, output_size)
-        # self.sigmoid = nn.Sigmoid()  # To constrain outputs between 0 and 1
+        self.sigmoid = nn.Sigmoid()  # To constrain outputs between 0 and 1
 
     def forward(self, x):
         out, _ = self.rnn(x)
         out = self.fc(out)
-        # out = self.sigmoid(out)
+        out = self.sigmoid(out)
         return out
 
 # Function to train the surrogate model
@@ -140,7 +140,7 @@ def hyperparameter_optimization(num_iterations=10):
 
         # Sample hyperparameters
         num_layers = random.choice([1,2,3])
-        hidden_sizes_snn = [random.randint(10,70) for _ in range(num_layers)]
+        hidden_sizes_snn = [random.randint(30,70) for _ in range(num_layers)]
         thresholds = [random.uniform(0.5, 2.0) for _ in range(num_layers + 1)]
         decays = [random.uniform(0.2, 1.0) for _ in range(num_layers + 1)]
         input_optimization_lr = random.choice([0.01])
@@ -210,7 +210,7 @@ def hyperparameter_optimization(num_iterations=10):
     return results, best_hyperparams
 
 # Run the hyperparameter optimization
-num_iterations = 10  # Adjust as needed
+num_iterations = 88 # Adjust as needed
 results, best_hyperparams = hyperparameter_optimization(num_iterations)
 
 # Optional: Plotting accuracies
@@ -258,7 +258,7 @@ with torch.no_grad():
     snn_outputs_test = snn_model(binary_optimized_inputs)
 
 # Step 6: Evaluate Performance
-desired_outputs_np = desired_outputs[:1].numpy()
+desired_outputs_np = desired_outputs.numpy()
 snn_outputs_np = snn_outputs_test.numpy()
 accuracy = np.mean(snn_outputs_np == desired_outputs_np)
 print(f"\nFinal Accuracy of SNN Output with Best Hyperparameters: {accuracy * 100:.2f}%")
